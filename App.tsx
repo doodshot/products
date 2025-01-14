@@ -1,20 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'react-native';
+import { useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import RootStack from './src/Navigation/RootStack';
 
 export default function App() {
+  useEffect(() => {
+    // Nascondi la barra di stato quando l'app è avviata
+    StatusBar.setHidden(true, 'fade'); // 'fade' per un'animazione di dissolvenza
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <RootStack/>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
