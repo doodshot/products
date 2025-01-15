@@ -9,7 +9,6 @@ module.exports = {
   plugins: [
     'prettier',
     '@react-native',
-    //  Assicurarsi di aggiungere il plugin unused-imports {package.json -> devDependencies}
     'unused-imports',
   ],
   rules: {

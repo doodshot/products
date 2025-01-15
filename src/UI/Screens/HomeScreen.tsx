@@ -1,25 +1,14 @@
-import { SafeAreaView, Text, StyleSheet } from 'react-native';
-import { useEffect, useState } from 'react';
+import { SafeAreaView, Text, StyleSheet, FlatList, ListRenderItem, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import ProductCard from '../../Components/Molecules/ProductCard';
+import { Product } from '../../model/Product.type';
 
-export type Product = {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  }
-}
 
 
 export default function HomeScreen() {
   //Use State
   const [products, setProducts] = useState<Product[]>([]);
   const [initialProducts, setInitialProducts] = useState<Product[]>([]);
-
   // Use Effect
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
@@ -30,14 +19,27 @@ export default function HomeScreen() {
         });
   }, []);
 
+  const onPressCart = () => {
+    console.log("onPressCart");
+  }
+  const ItemSeparatorComponent = useCallback(() => <View style={{height: 20}}></View>, []);
+
   console.log(products)
   console.log(initialProducts)
 
+  const renderItem = useCallback<ListRenderItem<Product>>(({item}) => {
+    return <ProductCard product={item} onPress={onPressCart}/>;
+  }, []);
+
   return (
        <SafeAreaView>
-         <Text>
-           Ciao Home screen
-         </Text>
+         <FlatList
+           style={{width: '100%', marginTop: 20}}
+           showsVerticalScrollIndicator={false}
+           ItemSeparatorComponent={ItemSeparatorComponent}
+           data={products}
+           renderItem={renderItem}
+         />
        </SafeAreaView>
     );
 }
