@@ -5,13 +5,13 @@ import RootStack from './src/Navigation/RootStack';
 
 export default function App() {
   useEffect(() => {
-    // Nascondi la barra di stato quando l'app è avviata
+    // Nascondi la barra di stato quando l'app è atavist
     StatusBar.setHidden(true, 'fade'); // 'fade' per un'animazione di dissolvenza
   }, []);
 
   return (
     <NavigationContainer>
-      <RootStack/>
+      <RootStack />
     </NavigationContainer>
   );
 }
