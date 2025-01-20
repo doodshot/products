@@ -1,3 +1,4 @@
+import React from 'react';
 import { StatusBar } from 'react-native';
 import { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';

@@ -1,8 +1,9 @@
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image } from "react-native";
-import HomeScreen from "../UI/Screens/HomeScreen";
-import FavScreen from "../UI/Screens/FavScreen";
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Image } from 'react-native';
+import HomeScreen from '../UI/Screens/HomeScreen';
+import FavScreen from '../UI/Screens/FavScreen';
+import CartScreen from '../UI/Screens/CartScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -14,26 +15,29 @@ export default function TabNavigator() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: "#000",
-          alignItems: "center",
-          justifyContent: "center",
+          backgroundColor: '#E5E5E5',
+          alignItems: 'center',
+          justifyContent: 'center',
           height: 65,
-          borderColor: "#fff",
           width: 350,
-          alignSelf: "center",
+          alignSelf: 'center',
           borderRadius: 25,
           marginBottom: 25,
         },
         tabBarIcon: ({ focused }) => {
           let iconSource;
-          if (route.name === "Home") {
+          if (route.name === 'Home') {
             iconSource = focused
-              ? require("../../assets/house-selected.png")
-              : require("../../assets/house.png");
-          } else if (route.name === "Fav") {
+              ? require('../../assets/house-selected.png')
+              : require('../../assets/house.png');
+          } else if (route.name === 'Fav') {
             iconSource = focused
-              ? require("../../assets/fav-selected.png")
-              : require("../../assets/fav.png");
+              ? require('../../assets/fav-selected.png')
+              : require('../../assets/fav.png');
+          } else if (route.name === 'Cart') {
+            iconSource = focused
+              ? require('../../assets/cart-selected.png')
+              : require('../../assets/cart.png');
           }
           return (
             <Image
@@ -43,10 +47,10 @@ export default function TabNavigator() {
             />
           );
         },
-      })}
-    >
-      <Tab.Screen name={"Home"} component={HomeScreen} />
-      <Tab.Screen name={"Fav"} component={FavScreen} />
+      })}>
+      <Tab.Screen name={'Home'} component={HomeScreen} />
+      <Tab.Screen name={'Fav'} component={FavScreen} />
+      <Tab.Screen name={'Cart'} component={CartScreen} />
     </Tab.Navigator>
   );
 }
