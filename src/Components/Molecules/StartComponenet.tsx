@@ -3,20 +3,16 @@ import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from './styles.ascdesc';
 
-export interface CountComponentProps {
+export interface StartComponentProps {
   onSort: () => void;
   isSelected: boolean;
 }
 
-export default function DescComponent({ onSort, isSelected }: CountComponentProps) {
+export default function StartComponenet({ onSort, isSelected }: StartComponentProps) {
   return (
     <View style={styles.ctn}>
       <TouchableOpacity onPress={onSort}>
-        <Ionicons
-          name="trending-down-outline"
-          size={32}
-          color={isSelected ? 'lightgray' : 'black'}
-        />
+        <Ionicons name="refresh-outline" size={32} color={isSelected ? 'lightgray' : 'black'} />
       </TouchableOpacity>
     </View>
   );

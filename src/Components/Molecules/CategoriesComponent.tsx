@@ -5,11 +5,13 @@ import { useFonts } from 'expo-font';
 interface CategoriesComponentProps {
   category: string;
   onCategoryPress: (item: string) => void;
+  isSelected: boolean;
 }
 
 export default function CategoriesComponent({
   category,
   onCategoryPress,
+  isSelected,
 }: CategoriesComponentProps) {
   const onPress = useCallback(() => {
     if (!onCategoryPress) {
@@ -28,7 +30,7 @@ export default function CategoriesComponent({
   return (
     <View style={styles.ctn}>
       <TouchableOpacity onPress={onPress}>
-        <Text style={styles.txt}>{category}</Text>
+        <Text style={isSelected ? styles.selectedText : styles.txt}>{category}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -44,5 +46,10 @@ const styles = StyleSheet.create({
   txt: {
     fontSize: 24,
     fontFamily: 'Merry-Bold',
+  },
+  selectedText: {
+    fontSize: 24,
+    fontFamily: 'Merry-Bold',
+    color: 'lightgray',
   },
 });
