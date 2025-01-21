@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, ScrollView, Image, View } from 'react-native';
+import { Text, ScrollView, Image, View } from 'react-native';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../Navigation/RootStack';
 import { Ionicons } from '@expo/vector-icons';
 import { Product } from '../../model/Product.type';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import styles from '../../Components/Atoms/stylesDetail';
 export default function DetailsScreen() {
   //Navigation
   const nav = useNavigation<NavigationProp<RootStackParamList, 'Details'>>();
@@ -43,53 +44,25 @@ export default function DetailsScreen() {
         <Text style={styles.title} numberOfLines={3}>
           {product.title}
         </Text>
-        <Text style={styles.cat}>Category: {product.category}</Text>
+        <Text style={styles.cat}>Category</Text>
+        <Text style={styles.desc}>{product.category}</Text>
         <Text style={styles.titleDesc}>Description</Text>
         <Text style={styles.desc}>{product.description}</Text>
+        <Text style={styles.titleDesc}>Rating</Text>
+        <Text style={styles.desc}>{product.rating.rate}/5</Text>
+        {/* numberReviews */}
+        <Text style={styles.titleDesc}>Number of reviews</Text>
+        <View style={styles.ctnNumberReviews}>
+          <Text>{product.rating.count}</Text>
+          <Image source={require('../../../assets/imgReviews.png')} style={styles.iconReview} />
+        </View>
+        {/* price componenet */}
+        <View style={styles.ctnPrice}>
+          <View style={styles.ctnTxtPrice}>
+            <Text style={styles.pricetxt}>${product.price}</Text>
+          </View>
+        </View>
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  ctn: {
-    flex: 1,
-  },
-  backIcon: {
-    marginBottom: 16,
-    marginHorizontal: 24,
-  },
-  header: {
-    flex: 1,
-    padding: 30,
-    paddingTop: 50,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
-  },
-  img: {
-    resizeMode: 'contain',
-    width: 300,
-    height: 300,
-  },
-  title: {
-    marginTop: 10,
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  desc: {
-    marginTop: 10,
-    fontSize: 16,
-    fontWeight: 'regular',
-  },
-  cat: {
-    marginTop: 10,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  titleDesc: {
-    marginTop: 10,
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});

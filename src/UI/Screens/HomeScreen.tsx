@@ -1,14 +1,18 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, FlatList, ListRenderItem, View } from 'react-native';
+import { SafeAreaView, StyleSheet, FlatList, ListRenderItem, View, ScrollView } from 'react-native';
 import { useCallback, useEffect, useState } from 'react';
 import ProductCard from '../../Components/Molecules/ProductCard';
 import { Product } from '../../model/Product.type';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../Navigation/RootStack';
+import CategoriesComponent from '../../Components/Molecules/CategoriesComponent';
+import { CategoriesType } from '../../model/Categories.type';
+import CountComponent from '../../Components/Molecules/CountComponent';
 
 export default function HomeScreen() {
   //Use State
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [initialProducts, setInitialProducts] = useState<Product[]>([]);
   const nav = useNavigation<NavigationProp<RootStackParamList, 'Home'>>();
   // Use Effect
@@ -17,7 +21,15 @@ export default function HomeScreen() {
       .then((res) => res.json())
       .then((response: Product[]) => {
         setProducts(response);
-        setInitialProducts(response);
+        setInitialProducts([...response]);
+      });
+  }, []);
+  //chiamata categories da finire
+  useEffect(() => {
+    fetch('https://fakestoreapi.com/products/categories')
+      .then((res) => res.json())
+      .then((response: string[]) => {
+        setCategories(response);
       });
   }, []);
 
@@ -29,6 +41,7 @@ export default function HomeScreen() {
     },
     [nav]
   );
+  //da implementare
   const onAddToCart = () => {
     console.log('onPressCart');
   };
@@ -36,9 +49,6 @@ export default function HomeScreen() {
     console.log('onPressCart');
   };
   const ItemSeparatorComponent = useCallback(() => <View style={{ height: 20 }}></View>, []);
-
-  console.log(products);
-  console.log(initialProducts);
 
   const renderItem = useCallback<ListRenderItem<Product>>(
     ({ item }) => {
@@ -54,8 +64,38 @@ export default function HomeScreen() {
     [onDetail]
   );
 
+  const onCategoryPress = useCallback(
+    (categoryProp: string) => {
+      if (categoryProp === CategoriesType.electronics) {
+        setProducts(initialProducts.filter((product) => product.category === categoryProp));
+      } else if (categoryProp === CategoriesType.jewelery) {
+        setProducts(initialProducts.filter((product) => product.category === categoryProp));
+      } else if (categoryProp === CategoriesType.menClothing) {
+        setProducts(initialProducts.filter((product) => product.category === categoryProp));
+      } else if (categoryProp === CategoriesType.womenClothing) {
+        setProducts(initialProducts.filter((product) => product.category === categoryProp));
+      }
+    },
+    [initialProducts]
+  );
+
   return (
     <SafeAreaView style={style.ctn}>
+      <View style={style.ctnFilter}>
+        <CountComponent onSort={() => {}} />
+      </View>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        style={style.ctnCategories}>
+        {categories.map((categoryItem, index) => (
+          <CategoriesComponent
+            key={index}
+            category={categoryItem}
+            onCategoryPress={onCategoryPress}
+          />
+        ))}
+      </ScrollView>
       <FlatList
         style={style.imgFlatList}
         showsVerticalScrollIndicator={false}
@@ -74,5 +114,16 @@ const style = StyleSheet.create({
   },
   imgFlatList: {
     marginTop: 20,
+  },
+  ctnCategories: {
+    margin: 10,
+  },
+  CountComponent: {
+    alignItems: 'center',
+  },
+  ctnFilter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
