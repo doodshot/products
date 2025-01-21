@@ -15,7 +15,7 @@ export default function TabNavigator() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#E5E5E5',
+          backgroundColor: '#ada6a6',
           alignItems: 'center',
           justifyContent: 'center',
           height: 65,

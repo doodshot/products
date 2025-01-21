@@ -7,7 +7,8 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../Navigation/RootStack';
 import CategoriesComponent from '../../Components/Molecules/CategoriesComponent';
 import { CategoriesType } from '../../model/Categories.type';
-import CountComponent from '../../Components/Molecules/CountComponent';
+import DescComponent from '../../Components/Molecules/DescComponent';
+import AscComponent from '../../Components/Molecules/AscComponent';
 
 export default function HomeScreen() {
   //Use State
@@ -82,7 +83,8 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={style.ctn}>
       <View style={style.ctnFilter}>
-        <CountComponent onSort={() => {}} />
+        <DescComponent onSort={() => {}} />
+        <AscComponent onSort={() => {}} />
       </View>
       <ScrollView
         horizontal={true}
@@ -118,12 +120,9 @@ const style = StyleSheet.create({
   ctnCategories: {
     margin: 10,
   },
-  CountComponent: {
-    alignItems: 'center',
-  },
   ctnFilter: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'flex-start',
   },
 });
