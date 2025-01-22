@@ -8,6 +8,7 @@ interface ProductCardProps {
   onFav: () => void;
   onAddToCart: () => void;
   isSelected: boolean;
+  isSelectedCart: boolean;
 }
 /*
   id: number;
@@ -21,7 +22,14 @@ interface ProductCardProps {
     count: number;
   }
 */
-const ProductCard = ({ product, onDetail, onAddToCart, onFav, isSelected }: ProductCardProps) => {
+const ProductCard = ({
+  product,
+  onDetail,
+  onAddToCart,
+  onFav,
+  isSelected,
+  isSelectedCart,
+}: ProductCardProps) => {
   //UseState
   const realPrice = product.price + 100;
   return (
@@ -61,7 +69,14 @@ const ProductCard = ({ product, onDetail, onAddToCart, onFav, isSelected }: Prod
         </View>
         <TouchableOpacity onPress={onAddToCart}>
           <View style={styles.ctnImageCart}>
-            <Image style={styles.iconCart} source={require('../../../assets/cart.png')} />
+            <Image
+              style={styles.iconCart}
+              source={
+                isSelectedCart
+                  ? require('../../../assets/cart-selected.png')
+                  : require('../../../assets/cart.png')
+              }
+            />
           </View>
         </TouchableOpacity>
       </View>

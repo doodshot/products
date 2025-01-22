@@ -1,10 +1,15 @@
-import { FlatList, ListRenderItem, SafeAreaView } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import { FlatList, ListRenderItem, SafeAreaView, StyleSheet, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
 import { Product } from '../../model/Product.type';
 import { storage } from '../../core/storage/storage';
 import ProductCard from '../../Components/Molecules/ProductCard';
+import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../Navigation/RootStack';
+import ListEmptyComponetnFlatList from '../../Components/Atoms/ListEmptyComponetnFlatList';
 
 export default function FavScreen() {
+  //navigation
+  const nav = useNavigation<NavigationProp<RootStackParamList, 'Home'>>();
   //useState
   const [favProducts, setFavProducts] = useState<Product[]>([]);
   //mmkv storage
@@ -31,19 +36,51 @@ export default function FavScreen() {
           onFav={() => onFavorite(item.id)}
           isSelected={true}
           onAddToCart={() => {}}
-          onDetail={() => {}}
+          onDetail={() => onDetail(item.id)}
+          isSelectedCart={false}
         />
       );
     },
     [onFavorite]
   );
-  // Recupera i dati al montaggio della schermata
-  useEffect(() => {
-    loadFavorites();
-  }, [loadFavorites]);
+  const onDetail = useCallback(
+    (id: number) => {
+      nav.navigate('Details', {
+        id,
+      });
+    },
+    [nav]
+  );
+  const ItemSeparatorComponent = useCallback(
+    () => <View style={styles.useCallBackStyle}></View>,
+    []
+  );
+  // Usa useFocusEffect per ricaricare i preferiti quando la schermata torna in focus
+  useFocusEffect(
+    useCallback(() => {
+      loadFavorites();
+    }, [loadFavorites])
+  );
   return (
-    <SafeAreaView>
-      <FlatList data={favProducts} renderItem={renderItem} />
+    <SafeAreaView style={styles.ctn}>
+      <FlatList
+        data={favProducts}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        ListEmptyComponent={ListEmptyComponetnFlatList}
+      />
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  ctn: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  useCallBackStyle: {
+    height: 20,
+  },
+});

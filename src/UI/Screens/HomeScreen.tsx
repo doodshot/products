@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, ListRenderItem, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import ProductCard from '../../Components/Molecules/ProductCard';
 import { Product } from '../../model/Product.type';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../Navigation/RootStack';
 import CategoriesComponent from '../../Components/Molecules/CategoriesComponent';
 import { CategoriesType } from '../../model/Categories.type';
@@ -20,6 +20,7 @@ export default function HomeScreen() {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSort, setSelectedSort] = useState<SortType>(SortType.NONE);
   const [fav, setFav] = useState<number[]>([]);
+  const [cart, setCart] = useState<number[]>([]);
   const nav = useNavigation<NavigationProp<RootStackParamList, 'Home'>>();
   // Use Effect
   //chiamata products
@@ -49,9 +50,15 @@ export default function HomeScreen() {
     [nav]
   );
   //da implementare
-  const onAddToCart = () => {
-    console.log('onPressCart');
-  };
+  const onAddToCart = useCallback(
+    async (id: number) => {
+      const updateCart = cart.includes(id) ? cart.filter((id) => id !== id) : [...cart, id];
+      storage.setItem('cart', JSON.stringify(updateCart));
+      setCart(updateCart);
+      console.log(cart);
+    },
+    [cart]
+  );
   const addFav = useCallback(
     async (newId: number) => {
       const updateFavs = fav.includes(newId) ? fav.filter((id) => id !== newId) : [...fav, newId];
@@ -70,12 +77,27 @@ export default function HomeScreen() {
       console.error(err);
     }
   }, []);
+  const loadCart = useCallback(async () => {
+    try {
+      const cartIds = await storage.getItem('cart');
+      const carts = cartIds ? JSON.parse(cartIds) : [];
+      setCart(carts);
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
 
-  // Recupera i preferiti al montaggio del componente
-  useEffect(() => {
-    loadFavorites();
-    console.log(fav);
-  }, [loadFavorites]);
+  //Utilizzo useFocusEffect per far in modo di ricaricare i preferiti(senza perderne mai lo stato isSelected)
+  useFocusEffect(
+    useCallback(() => {
+      loadFavorites();
+    }, [loadFavorites])
+  );
+  useFocusEffect(
+    useCallback(() => {
+      loadCart();
+    }, [loadCart])
+  );
 
   const onSort = (type: SortType) => {
     if (type === SortType.ASC) {
@@ -101,13 +123,14 @@ export default function HomeScreen() {
         <ProductCard
           product={item}
           onDetail={() => onDetail(item.id)}
-          onAddToCart={onAddToCart}
+          onAddToCart={() => onAddToCart(item.id)}
           onFav={() => addFav(item.id)}
           isSelected={fav.includes(item.id)}
+          isSelectedCart={cart.includes(item.id)}
         />
       );
     },
-    [addFav, onDetail]
+    [addFav, cart, fav, onAddToCart, onDetail]
   );
 
   const onCategoryPress = useCallback(
