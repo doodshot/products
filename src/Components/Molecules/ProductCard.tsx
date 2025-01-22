@@ -1,12 +1,13 @@
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import { Product } from '../../model/Product.type';
-import React, { useState } from 'react';
+import React from 'react';
 
 interface ProductCardProps {
   product: Product;
   onDetail: () => void;
   onFav: () => void;
   onAddToCart: () => void;
+  isSelected: boolean;
 }
 /*
   id: number;
@@ -20,11 +21,22 @@ interface ProductCardProps {
     count: number;
   }
 */
-const ProductCard = ({ product, onDetail, onAddToCart, onFav }: ProductCardProps) => {
+const ProductCard = ({ product, onDetail, onAddToCart, onFav, isSelected }: ProductCardProps) => {
   //UseState
-  const [realPrice, setIsRealPrice] = useState(product.price + 100);
+  const realPrice = product.price + 100;
   return (
     <View style={styles.ctn}>
+      <View style={styles.ctnFav}>
+        <TouchableOpacity onPress={onFav}>
+          <Image
+            source={
+              isSelected
+                ? require('../../../assets/fav-selected-product.png')
+                : require('../../../assets/fav-selected.png')
+            }
+          />
+        </TouchableOpacity>
+      </View>
       <View style={styles.ctnImg}>
         <TouchableOpacity onPress={onDetail}>
           <Image source={{ uri: product.image }} style={styles.img} />
@@ -146,6 +158,14 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     resizeMode: 'contain',
+  },
+  ctnFav: {
+    position: 'absolute',
+    top: 10,
+    right: 0,
+    marginTop: 15,
+    marginRight: 15,
+    zIndex: 1,
   },
 });
 

@@ -10,6 +10,7 @@ import DescComponent from '../../Components/Molecules/DescComponent';
 import AscComponent from '../../Components/Molecules/AscComponent';
 import { SortType } from '../../model/SortType';
 import StartComponenet from '../../Components/Molecules/StartComponenet';
+import { storage } from '../../core/storage/storage';
 
 export default function HomeScreen() {
   //Use State
@@ -18,8 +19,10 @@ export default function HomeScreen() {
   const [initialProducts, setInitialProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSort, setSelectedSort] = useState<SortType>(SortType.NONE);
+  const [fav, setFav] = useState<number[]>([]);
   const nav = useNavigation<NavigationProp<RootStackParamList, 'Home'>>();
   // Use Effect
+  //chiamata products
   useEffect(() => {
     fetch('https://fakestoreapi.com/products')
       .then((res) => res.json())
@@ -28,7 +31,7 @@ export default function HomeScreen() {
         setInitialProducts([...response]);
       });
   }, []);
-  //chiamata categories da finire
+  //chiamata categories
   useEffect(() => {
     fetch('https://fakestoreapi.com/products/categories')
       .then((res) => res.json())
@@ -49,15 +52,37 @@ export default function HomeScreen() {
   const onAddToCart = () => {
     console.log('onPressCart');
   };
-  const onFav = () => {
-    console.log('onPressCart');
-  };
+  const addFav = useCallback(
+    async (newId: number) => {
+      const updateFavs = fav.includes(newId) ? fav.filter((id) => id !== newId) : [...fav, newId];
+      storage.setItem('favorites', JSON.stringify(updateFavs));
+      setFav(updateFavs);
+      console.log(fav);
+    },
+    [fav]
+  );
+  const loadFavorites = useCallback(async () => {
+    try {
+      const favoriteIds = await storage.getItem('favorites');
+      const favorites = favoriteIds ? JSON.parse(favoriteIds) : [];
+      setFav(favorites);
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
+
+  // Recupera i preferiti al montaggio del componente
+  useEffect(() => {
+    loadFavorites();
+    console.log(fav);
+  }, [loadFavorites]);
+
   const onSort = (type: SortType) => {
     if (type === SortType.ASC) {
-      setProducts([...products].sort((a, b) => a.rating.count - b.rating.count));
+      setProducts([...products].sort((a, b) => b.rating.count - a.rating.count));
       setSelectedSort(SortType.ASC);
     } else if (type === SortType.DESC) {
-      setProducts([...products].sort((a, b) => b.rating.count - a.rating.count));
+      setProducts([...products].sort((a, b) => a.rating.count - b.rating.count));
       setSelectedSort(SortType.DESC);
     } else if (type === SortType.STR) {
       setProducts([...initialProducts]);
@@ -77,24 +102,26 @@ export default function HomeScreen() {
           product={item}
           onDetail={() => onDetail(item.id)}
           onAddToCart={onAddToCart}
-          onFav={onFav}
+          onFav={() => addFav(item.id)}
+          isSelected={fav.includes(item.id)}
         />
       );
     },
-    [onDetail]
+    [addFav, onDetail]
   );
 
   const onCategoryPress = useCallback(
     (categoryProp: string) => {
       setSelectedCategory(categoryProp);
+      setSelectedSort(SortType.NONE);
       if (categoryProp === CategoriesType.electronics) {
-        setProducts(products.filter((product) => product.category === categoryProp));
+        setProducts(initialProducts.filter((product) => product.category === categoryProp));
       } else if (categoryProp === CategoriesType.jewelery) {
-        setProducts(products.filter((product) => product.category === categoryProp));
+        setProducts(initialProducts.filter((product) => product.category === categoryProp));
       } else if (categoryProp === CategoriesType.menClothing) {
-        setProducts(products.filter((product) => product.category === categoryProp));
+        setProducts(initialProducts.filter((product) => product.category === categoryProp));
       } else if (categoryProp === CategoriesType.womenClothing) {
-        setProducts(products.filter((product) => product.category === categoryProp));
+        setProducts(initialProducts.filter((product) => product.category === categoryProp));
       }
     },
     [initialProducts]

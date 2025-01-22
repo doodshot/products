@@ -15,7 +15,7 @@ export default function DetailsScreen() {
     category: '',
     description: '',
     id: 0,
-    image: '',
+    image: 'https://placehold.co/500x300',
     price: 0,
     rating: { count: 0, rate: 0 },
     title: '',
