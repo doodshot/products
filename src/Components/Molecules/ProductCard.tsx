@@ -52,6 +52,9 @@ const ProductCard = ({
         <Text style={styles.title} numberOfLines={1}>
           {product.title}
         </Text>
+        <View style={styles.desc}>
+          <Text numberOfLines={1}>{product.description}</Text>
+        </View>
         <View style={styles.ctnReview}>
           <Text>{product.rating.rate}/5</Text>
           <Image source={require('../../../assets/star.png')} style={styles.iconStar} />
@@ -118,6 +121,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 40,
     fontWeight: 'bold',
+  },
+  desc: {
+    marginHorizontal: 20,
   },
   iconStar: {
     width: 16,
