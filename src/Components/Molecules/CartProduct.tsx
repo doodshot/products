@@ -11,7 +11,7 @@ interface CartProductProps {
 export default function CartProduct({ product, onRemove }: CartProductProps) {
   const [quantity, setQuantity] = useState(1);
   const increaseQuantity = () => {
-    if (quantity > 20) setQuantity((prev) => prev - 1); // max 19
+    if (quantity < 20) setQuantity((prev) => prev + 1); // max 19
   };
   const decreaseQuantity = () => {
     if (quantity > 1) setQuantity((prev) => prev - 1); // non puoi scendere sotto 1

@@ -28,7 +28,7 @@ export default function CartScreen() {
   function onRemove(id: number) {
     const updateCart = cart.filter((product) => product.id !== id);
     setCart(updateCart);
-    storage.setItem('favorites', JSON.stringify(updateCart.map((cart) => cart.id)));
+    storage.setItem('cart', JSON.stringify(updateCart.map((cart) => cart.id)));
   }
   //renderItem
   const renderItem = useCallback<ListRenderItem<Product>>(
@@ -53,7 +53,7 @@ export default function CartScreen() {
         <Text style={styles.title}>My Cart</Text>
       </View>
       <FlatList data={cart} renderItem={renderItem} />
-      <BuyButton onBuy={onBuy} />
+      <BuyButton onBuy={onBuy} isActived={cart.length === 0} />
     </SafeAreaView>
   );
 }

@@ -3,14 +3,16 @@ import { TouchableOpacity, View, StyleSheet, Text } from 'react-native';
 
 export type BuyButtonProps = {
   onBuy: () => void;
+  isActived: boolean;
 };
 
-const BuyButton = ({ onBuy }: BuyButtonProps) => {
+const BuyButton = ({ onBuy, isActived }: BuyButtonProps) => {
+  console.log(isActived);
   return (
-    <TouchableOpacity onPress={onBuy}>
+    <TouchableOpacity onPress={onBuy} disabled={isActived}>
       <View style={styles.ctn}>
         <View style={styles.btnCtn}>
-          <Text style={styles.buy}>Acquista</Text>
+          <Text style={isActived ? styles.buyDisabled : styles.buy}>Acquista</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -44,6 +46,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Merry-Bold',
     fontWeight: '900',
+  },
+  buyDisabled: {
+    fontSize: 24,
+    textAlign: 'center',
+    fontFamily: 'Merry-Bold',
+    fontWeight: '900',
+    color: 'lightgray',
   },
 });
 
