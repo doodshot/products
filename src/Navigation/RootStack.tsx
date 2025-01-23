@@ -5,6 +5,7 @@ import TabNavigator from './tab.navigator';
 import React from 'react';
 import CartScreen from '../UI/Screens/CartScreen';
 import DetailsScreen from '../UI/Screens/DetailsScreen';
+import BuyScreen from '../UI/Screens/BuyScreen';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -12,6 +13,7 @@ export type RootStackParamList = {
   TabNavigator: undefined;
   Cart: undefined;
   Details: { id: number };
+  BuyScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -23,6 +25,7 @@ export default function RootStack() {
       <Stack.Screen name="Fav" component={FavScreen} />
       <Stack.Screen name={'Cart'} component={CartScreen} />
       <Stack.Screen name={'Details'} component={DetailsScreen} />
+      <Stack.Screen name={'BuyScreen'} component={BuyScreen} />
     </Stack.Navigator>
   );
 }

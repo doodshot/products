@@ -4,9 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { Product } from '../../model/Product.type';
 import { storage } from '../../core/storage/storage';
 import CartProduct from '../../Components/Molecules/CartProduct';
-import { useFocusEffect } from '@react-navigation/native';
+import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
+import BuyButton from '../../Components/Atoms/BuyButton';
+import { RootStackParamList } from '../../Navigation/RootStack';
 
 export default function CartScreen() {
+  //navigation
+  const nav = useNavigation<NavigationProp<RootStackParamList, 'Cart'>>();
   //useState
   const [cart, setCart] = useState<Product[]>([]);
   //loadCart
@@ -20,15 +24,28 @@ export default function CartScreen() {
       setCart(filteredCart);
     }
   }, []);
-  const renderItem = useCallback<ListRenderItem<Product>>(({ item }) => {
-    return <CartProduct product={item} onRemove={() => {}} />;
-  }, []);
+  //cart remove
+  function onRemove(id: number) {
+    const updateCart = cart.filter((product) => product.id !== id);
+    setCart(updateCart);
+    storage.setItem('favorites', JSON.stringify(updateCart.map((cart) => cart.id)));
+  }
+  //renderItem
+  const renderItem = useCallback<ListRenderItem<Product>>(
+    ({ item }) => {
+      return <CartProduct product={item} onRemove={() => onRemove(item.id)} />;
+    },
+    [onRemove]
+  );
   //useEffectCart
   useFocusEffect(
     useCallback(() => {
       loadCart();
     }, [loadCart])
   );
+  const onBuy = useCallback(() => {
+    return nav.navigate('BuyScreen');
+  }, [nav]);
   return (
     <SafeAreaView style={styles.ctn}>
       <View style={styles.header}>
@@ -36,6 +53,7 @@ export default function CartScreen() {
         <Text style={styles.title}>My Cart</Text>
       </View>
       <FlatList data={cart} renderItem={renderItem} />
+      <BuyButton onBuy={onBuy} />
     </SafeAreaView>
   );
 }
